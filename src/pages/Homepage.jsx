@@ -5,6 +5,7 @@ import { AiOutlineUserAdd, AiOutlineLink, AiOutlineCode } from "react-icons/ai";
 import { FaRobot } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
 import Footer from "../components/Footer";
+import imgH from './../assets/20945201.webp'
 
 const HomePage = () => {
   const howItWorksRef = useRef(null);
@@ -58,7 +59,7 @@ const HomePage = () => {
     {/* Right Image */}
     <div className="flex justify-center">
       <img 
-        src="/assets/20945201.webp" // Update with your actual image path
+        src={imgH} 
         alt="AI Chatbot" 
         className="w-80 md:w-full max-w-md" // Adjust size as needed
       />
