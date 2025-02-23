@@ -40,7 +40,7 @@
       if (!chatFrame) {
         chatFrame = document.createElement("iframe");
         chatFrame.id = "chatbot-frame";
-        chatFrame.src = `http://localhost:5174/chat?websiteId=${websiteId}`; 
+        chatFrame.src = `https://anvobot-ai-web-agent.vercel.app/chat?websiteId=${websiteId}`; 
         chatFrame.style.position = "fixed";
         chatFrame.style.bottom = "80px";
         chatFrame.style.right = "20px";
