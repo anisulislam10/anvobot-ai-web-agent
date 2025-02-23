@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { FaRobot } from "react-icons/fa";
+import Footer from "../components/Footer";
 
 const Login = () => {
   const { login } = useAuth();
@@ -24,12 +25,14 @@ const Login = () => {
       
       {/* Navbar */}
       <nav className="bg-gradient-to-r from-blue-600 to-purple-500 text-white p-5 flex justify-between items-center shadow-lg">
-        <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
-          <FaRobot className="text-3xl md:text-4xl text-white" /> Anvobot
+      <Link to='/'>  <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
+        <FaRobot className="text-3xl md:text-4xl text-white" /> Anvobot
         </h1>
+        </Link>
         <Link to="/signup" className="px-4 md:px-6 py-2 border border-white rounded-lg hover:bg-white hover:text-blue-600 transition">
           Signup
         </Link>
+        
       </nav>
 
       {/* Main Content */}
@@ -76,9 +79,7 @@ const Login = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-blue-600 to-purple-500 text-white text-center py-5 md:py-6 text-base md:text-lg font-medium">
-        &copy; 2025 Anvobot. All rights reserved.
-      </footer>
+   <Footer/>
       
     </div>
   );
