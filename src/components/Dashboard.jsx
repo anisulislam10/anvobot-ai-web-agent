@@ -192,7 +192,7 @@ const Dashboard = () => {
 
         {/* Chatbot Widget */}
         <div className="mt-10">
-          <ChatbotWidget />
+          {/* <ChatbotWidget /> */}
         </div>
       </main>
     </div>
