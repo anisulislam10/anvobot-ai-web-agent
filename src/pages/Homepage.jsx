@@ -59,7 +59,7 @@ const HomePage = () => {
     {/* Right Image */}
     <div className="flex justify-center">
       <img 
-        src={imgH} 
+        src={imgH } 
         alt="AI Chatbot" 
         className="w-80 md:w-full max-w-md" // Adjust size as needed
       />
