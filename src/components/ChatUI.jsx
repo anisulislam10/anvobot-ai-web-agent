@@ -57,7 +57,7 @@ const ChatUI = ({ closeChat }) => {
       <div className="flex justify-between items-center border-b pb-2 mb-2">
         <div className="flex items-center space-x-2">
           <BiMessageDetail className="text-blue-600 text-xl" />
-          <h2 className="text-lg font-semibold">Anvobot</h2>
+          <h2 className="text-lg font-semibold"></h2>
         </div>
         <button onClick={closeChat} className="text-gray-500 hover:text-red-500 cursor-pointer">
           <AiOutlineClose className="text-xl" />
@@ -93,7 +93,6 @@ const ChatUI = ({ closeChat }) => {
 
       {/* Footer */}
       <div className="text-xs text-gray-500 text-center mt-3">
-        Developed by <span className="font-semibold text-blue-500 text-md">Sharplogicians</span>
       </div>
     </div>
   );
