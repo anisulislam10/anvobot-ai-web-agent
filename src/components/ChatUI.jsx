@@ -22,12 +22,12 @@ const ChatUI = ({ closeChat }) => {
   const sendMessage = async () => {
     if (!input.trim()) return;
     if (!websiteId) {
-      setMessages([...messages, { role: "bot", content: "❌ Website ID is missing." }]);
+      setMessages((prev) => [...prev, { role: "bot", content: "❌ Website ID is missing." }]);
       return;
     }
 
     const userMessage = { role: "user", content: input };
-    setMessages([...messages, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
 
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_SERVER_URL}chatbot/chat`, {
@@ -35,25 +35,36 @@ const ChatUI = ({ closeChat }) => {
         websiteId
       });
 
-      setMessages([...messages, userMessage, { role: "bot", content: data.response }]);
+      setMessages((prev) => [...prev, { role: "bot", content: data.response }]);
     } catch (error) {
       console.error("Chatbot API Error:", error.response?.data || error.message);
-      setMessages([...messages, userMessage, { role: "bot", content: "❌ Error processing request." }]);
+      setMessages((prev) => [...prev, { role: "bot", content: "❌ Error processing request." }]);
     }
 
     setInput("");
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <div className="fixed bottom-1 right-4 bg-white p-7 w-full h-full">
+      {/* Header with Close Button */}
       <div className="flex justify-between items-center border-b pb-2 mb-2">
         <div className="flex items-center space-x-2">
           <BiMessageDetail className="text-blue-600 text-xl" />
           <h2 className="text-lg font-semibold">Anvobot</h2>
         </div>
-        <AiOutlineClose className="text-gray-500 hover:text-red-500 cursor-pointer text-xl" onClick={closeChat} />
+        <button onClick={closeChat} className="text-gray-500 hover:text-red-500 cursor-pointer">
+          <AiOutlineClose className="text-xl" />
+        </button>
       </div>
 
+      {/* Messages */}
       <div className="h-80 overflow-y-auto space-y-2 p-1">
         {messages.map((msg, index) => (
           <div key={index} className={`p-2 rounded-md max-w-4/5 ${msg.role === "user" ? "bg-blue-500 text-white self-end ml-auto" : "bg-gray-200 text-gray-800"}`}>
@@ -62,12 +73,14 @@ const ChatUI = ({ closeChat }) => {
         ))}
       </div>
 
+      {/* Input Field */}
       <div className="flex mt-2">
         <input
           type="text"
           className="border p-2 w-full rounded-md focus:ring focus:ring-blue-300"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}  // Listen for Enter key
           placeholder="Ask..."
         />
         <button
@@ -78,6 +91,7 @@ const ChatUI = ({ closeChat }) => {
         </button>
       </div>
 
+      {/* Footer */}
       <div className="text-xs text-gray-500 text-center mt-3">
         Developed by <span className="font-semibold text-blue-500 text-md">Sharplogicians</span>
       </div>
