@@ -79,7 +79,7 @@ const ChatUI = ({ closeChat }) => {
       </div>
 
       <div className="text-xs text-gray-500 text-center mt-3">
-        Developed by <span className="font-semibold text-blue-500 text-md">Anisul</span>
+        Developed by <span className="font-semibold text-blue-500 text-md">Sharplogicians</span>
       </div>
     </div>
   );
