@@ -16,7 +16,6 @@
   let chatButton = document.createElement("button");
   chatButton.innerHTML = `
       <img src="https://cdn-icons-png.flaticon.com/512/13330/13330989.png" alt="Chat Icon" width="24" height="24" style="margin-right: 5px;">
-      <span>Anvobot</span>
   `;
 
   Object.assign(chatButton.style, {
