@@ -3,7 +3,7 @@ import axios from "axios";
 import { AiOutlineClose, AiOutlineSend } from "react-icons/ai";
 import { BiMessageDetail } from "react-icons/bi";
 
-const ChatUI = ({ closeChat }) => {
+const ChatUI = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [websiteId, setWebsiteId] = useState(null);
@@ -52,16 +52,15 @@ const ChatUI = ({ closeChat }) => {
   };
 
   return (
-    <div className="fixed bottom-1 right-4 bg-white p-7 w-full h-full">
+    <div className="fixed  right-0.5 bg-white p-10 w-full h-full">
       {/* Header with Close Button */}
-      <div className="flex justify-between items-center border-b pb-2 mb-2">
-        <div className="flex items-center space-x-2">
-          <BiMessageDetail className="text-blue-600 text-xl" />
+      <div className="flex justify-end items-start border-b pb-2 mb-1">
+        <div className="flex items-start space-x-1">
           <h2 className="text-lg font-semibold"></h2>
         </div>
-        <button onClick={closeChat} className="text-gray-500 hover:text-red-500 cursor-pointer">
+        {/* <button onClick={closeChat} className="text-gray-500 hover:text-red-500 cursor-pointer">
           <AiOutlineClose className="text-xl" />
-        </button>
+        </button> */}
       </div>
 
       {/* Messages */}
@@ -80,8 +79,8 @@ const ChatUI = ({ closeChat }) => {
           className="border p-2 w-full rounded-md focus:ring focus:ring-blue-300"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}  // Listen for Enter key
-          placeholder="Ask..."
+          onKeyDown={handleKeyDown}  
+          placeholder="Welcome! How may I help you today"
         />
         <button
           className="bg-blue-600 text-white p-2 ml-2 rounded-md flex items-center justify-center hover:bg-blue-700 transition"
@@ -91,9 +90,9 @@ const ChatUI = ({ closeChat }) => {
         </button>
       </div>
 
-      {/* Footer */}
+      {/* Footer
       <div className="text-xs text-gray-500 text-center mt-3">
-      </div>
+      </div> */}
     </div>
   );
 };
