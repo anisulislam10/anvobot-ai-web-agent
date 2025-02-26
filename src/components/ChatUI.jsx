@@ -20,7 +20,6 @@ const ChatUI = () => {
       console.error("❌ Website ID is missing in URL.");
     }
 
-    // Retrieve or generate a unique userId
     let storedUserId = localStorage.getItem("userId");
     if (!storedUserId) {
       storedUserId = crypto.randomUUID();
@@ -30,7 +29,6 @@ const ChatUI = () => {
   }, []);
 
   useEffect(() => {
-    // Auto-scroll to the latest message
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -40,22 +38,22 @@ const ChatUI = () => {
       setMessages((prev) => [...prev, { role: "bot", content: "❌ Missing required data." }]);
       return;
     }
-  
+
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
-  
+
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}chatbot/chat`,
         { message: input, websiteId, userId }
       );
-  
+
       setMessages((prev) => [...prev, { role: "bot", content: data.response }]);
     } catch (error) {
       console.error("Chatbot API Error:", error.response?.data || error.message);
-  
+
       if (error.response?.data?.error?.code === "rate_limit_exceeded") {
         const retryAfter = error.response?.data?.error?.message.match(/in (\d+m\d+\.\d+s)/);
         setMessages((prev) => [
@@ -72,7 +70,6 @@ const ChatUI = () => {
       setLoading(false);
     }
   };
-  
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -82,7 +79,9 @@ const ChatUI = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-3 bg-white p-4 rounded-lg w-full h-full flex flex-col">
+    <div className="fixed bottom-5 right-3 bg-white p-4 rounded-lg shadow-lg flex flex-col 
+                    w-full h-full sm:max-w-sm sm:h-[80vh] md:max-w-md lg:max-w-lg">
+      
       {/* Messages */}
       <div className="flex-grow overflow-y-auto space-y-2 p-2">
         {messages.map((msg, index) => (
@@ -114,7 +113,8 @@ const ChatUI = () => {
           placeholder="Welcome! How may I help you today?"
         />
         <button
-          className="bg-blue-600 text-white p-2 ml-2 rounded-md flex items-center justify-center hover:bg-blue-700 transition"
+          className="bg-blue-600 text-white p-2 ml-2 rounded-md flex items-center justify-center 
+                     hover:bg-blue-700 transition"
           onClick={sendMessage}
           disabled={loading}
         >
