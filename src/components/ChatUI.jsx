@@ -79,7 +79,7 @@ const ChatUI = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-3 bg-white p-4 rounded-lg shadow-lg flex flex-col 
+    <div className="fixed bottom-5 right-3 bg-white p-4 rounded-lg  flex flex-col 
                     w-full h-full sm:max-w-sm sm:h-[80vh] md:max-w-md lg:max-w-lg">
       
       {/* Messages */}
