@@ -1,20 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { AiOutlineSend } from "react-icons/ai";
-import { FiMessageSquare } from "react-icons/fi";
 
 const ChatUI = () => {
-  const [messages, setMessages] = useState([
-    { role: "bot", content: "Welcome to our site! How may I help you today?" } // Initial welcome message
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [websiteId, setWebsiteId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Initialize chat (extract IDs)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const extractedWebsiteId = urlParams.get("websiteId");
@@ -22,7 +17,7 @@ const ChatUI = () => {
     if (extractedWebsiteId) {
       setWebsiteId(extractedWebsiteId);
     } else {
-      console.error("Website ID is missing in URL.");
+      console.error("❌ Website ID is missing in URL.");
     }
 
     let storedUserId = localStorage.getItem("userId");
@@ -33,7 +28,6 @@ const ChatUI = () => {
     setUserId(storedUserId);
   }, []);
 
-  // Auto-scroll to new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -41,7 +35,7 @@ const ChatUI = () => {
   const sendMessage = async () => {
     if (!input.trim()) return;
     if (!websiteId || !userId) {
-      setMessages((prev) => [...prev, { role: "bot", content: "System error. Please refresh the page." }]);
+      setMessages((prev) => [...prev, { role: "bot", content: "❌ Missing required data." }]);
       return;
     }
 
@@ -58,110 +52,76 @@ const ChatUI = () => {
 
       setMessages((prev) => [...prev, { role: "bot", content: data.response }]);
     } catch (error) {
-      console.error("Chatbot Error:", error);
-      setMessages((prev) => [
-        ...prev,
-        { 
-          role: "bot", 
-          content: error.response?.data?.error?.code === "rate_limit_exceeded" 
-            ? "Our agents are busy. Please try again shortly." 
-            : "Sorry, I'm having trouble responding. Please try again later."
-        }
-      ]);
+      console.error("Chatbot API Error:", error.response?.data || error.message);
+
+      if (error.response?.data?.error?.code === "rate_limit_exceeded") {
+        const retryAfter = error.response?.data?.error?.message.match(/in (\d+m\d+\.\d+s)/);
+        setMessages((prev) => [
+          ...prev,
+          { role: "bot", content: `⚠️ API rate limit exceeded. Please wait ${retryAfter ? retryAfter[1] : "a few minutes"} and try again.` },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { role: "bot", content: "❌ Unable to process request. Please try again later." },
+        ]);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter") {
       e.preventDefault();
       sendMessage();
     }
   };
 
   return (
-    <>
-      {/* Floating Chat Button */}
-      {!isOpen && (
+    <div className="fixed bottom-5 right-3 bg-white p-4 rounded-lg  flex flex-col 
+                    w-full h-full sm:max-w-sm sm:h-[80vh] md:max-w-md lg:max-w-lg">
+      
+      {/* Messages */}
+      <div className="flex-grow overflow-y-auto space-y-2 p-2">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`p-2 rounded-md max-w-4/5 ${
+              msg.role === "user"
+                ? "bg-blue-500 text-white self-end ml-auto"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            <p>{msg.content}</p>
+          </div>
+        ))}
+        {loading && (
+          <div className="p-2 rounded-md bg-gray-200 text-gray-800">⏳ Typing...</div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input Field */}
+      <div className="flex items-center border-t p-2">
+        <input
+          type="text"
+          className="border p-2 w-full rounded-md focus:ring focus:ring-blue-300"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Welcome! How may I help you today?"
+        />
         <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all"
+          className="bg-blue-600 text-white p-2 ml-2 rounded-md flex items-center justify-center 
+                     hover:bg-blue-700 transition"
+          onClick={sendMessage}
+          disabled={loading}
         >
-          <FiMessageSquare size={24} />
+          <AiOutlineSend className="text-lg" />
         </button>
-      )}
-
-      {/* Chat Window */}
-      {isOpen && (
-        <div className="fixed bottom-6 right-6 w-full max-w-md h-[70vh] flex flex-col bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
-          {/* Header */}
-          <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
-            <h2 className="font-semibold text-lg">Customer Support</h2>
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:text-gray-200"
-            >
-              ×
-            </button>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`mb-3 flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    msg.role === "user"
-                      ? "bg-blue-600 text-white rounded-br-none"
-                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap">{msg.content}</p>
-                </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start mb-3">
-                <div className="bg-white border border-gray-200 p-3 rounded-lg rounded-bl-none">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce delay-100"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce delay-200"></div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input Area */}
-          <div className="p-3 border-t border-gray-200 bg-white">
-            <div className="flex items-center">
-              <input
-                type="text"
-                className="flex-1 border border-gray-300 rounded-l-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type your message..."
-                disabled={loading}
-              />
-              <button
-                className="bg-blue-600 text-white p-3 rounded-r-lg hover:bg-blue-700 disabled:bg-blue-400 transition"
-                onClick={sendMessage}
-                disabled={loading || !input.trim()}
-              >
-                <AiOutlineSend size={20} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 };
 
