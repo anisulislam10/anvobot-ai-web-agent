@@ -50,50 +50,52 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const handleScrap = async () => {
-    if (!websiteURL) {
-      setMessage("❌ Please Enter a website URL.");
-      return;
-    }
-    
-    // Validate URL format
-    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-    if (!urlPattern.test(websiteURL)) {
-      setMessage("❌ Please enter a valid URL (e.g., https://example.com)");
-      return;
-    }
+ const handleScrap = async () => {
+  if (!websiteURL) {
+    setMessage("❌ Please Enter a website URL.");
+    return;
+  }
+  
+  // Validate URL format
+  const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/i;
+  if (!urlPattern.test(websiteURL)) {
+    setMessage("❌ Please enter a valid URL (e.g., https://example.com)");
+    return;
+  }
 
-    setLoading(true);
-    setMessage("");
-    setEmbedScript(null);
-    setCopied(false);
+  setLoading(true);
+  setMessage("");
+  setEmbedScript(null);
+  setCopied(false);
+  
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}web/add-website`, {
+      url: websiteURL,
+    });
     
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}web/add-website`, {
-        url: websiteURL,
-      });
-      
-      // Check if response has script
-      if (response.data.script) {
-        setEmbedScript(response.data.script);
-        setMessage(response.data.message || "✅ Website scraped successfully! Embed the chatbot using the script.");
-      } else {
-        setMessage("❌ No script returned from server.");
-      }
-    } catch (error) {
-      console.error("Error scraping website:", error);
-      
-      // Check if it's an existing website error with script
-      if (error.response?.data?.script) {
-        setEmbedScript(error.response.data.script);
-        setMessage(error.response.data.message || "⚠️ Website already scraped. Here's the embed script.");
-      } else {
-        setMessage(error.response?.data?.message || "❌ Failed to scrape website. Please check the URL and try again.");
-      }
+    console.log("Server response:", response.data); // Debug log
+    
+    // Check if response has script
+    if (response.data.script) {
+      setEmbedScript(response.data.script);
+      setMessage(response.data.message || "✅ Website processed successfully!");
+    } else {
+      setMessage("❌ No script returned from server. Response: " + JSON.stringify(response.data));
     }
-    setLoading(false);
-  };
-
+  } catch (error) {
+    console.error("Error scraping website:", error);
+    console.error("Error response data:", error.response?.data); // Debug log
+    
+    // Check if error response has script (for backward compatibility)
+    if (error.response?.data?.script) {
+      setEmbedScript(error.response.data.script);
+      setMessage(error.response.data.message || "⚠️ Website already exists. Here's the embed script.");
+    } else {
+      setMessage(error.response?.data?.message || "❌ Failed to process website. Please check the URL and try again.");
+    }
+  }
+  setLoading(false);
+};
   const handleCopy = async () => {
     if (embedScript) {
       try {
