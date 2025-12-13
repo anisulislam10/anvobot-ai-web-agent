@@ -159,8 +159,9 @@ const ChatUI = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gradient-to-br from-red-500 to-green-500 
-                   
+    <div className="flex flex-col bg-gradient-to-br from-white to-gray-50 
+                    w-full h-screen md:h-[600px] md:w-96 
+                    shadow-2xl rounded-t-xl md:rounded-xl 
                     border border-gray-200 overflow-hidden">
       
       {/* Header */}
