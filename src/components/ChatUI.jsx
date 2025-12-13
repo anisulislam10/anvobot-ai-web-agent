@@ -159,9 +159,8 @@ const ChatUI = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gradient-to-br from-white to-gray-50 
-                    w-full h-screen md:h-[600px] md:w-96 
-                    shadow-2xl rounded-t-xl md:rounded-xl 
+    <div className="flex flex-col bg-gradient-to-br from-red-500 to-green-500 
+                   
                     border border-gray-200 overflow-hidden">
       
       {/* Header */}
@@ -358,26 +357,11 @@ const ChatUI = () => {
         </div>
         
         {/* Input Help Text */}
-        <div className="text-xs text-gray-400 text-center mt-2">
-          Press <kbd className="px-1.5 py-0.5 bg-gray-100 rounded border">Enter</kbd> to send • 
-          <kbd className="px-1.5 py-0.5 bg-gray-100 rounded border mx-1">Shift</kbd> + 
-          <kbd className="px-1.5 py-0.5 bg-gray-100 rounded border ml-1">Enter</kbd> for new line
-        </div>
+        
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-        <div className="flex items-center justify-between text-xs text-gray-500">
-          <div className="flex items-center space-x-1">
-            <AiOutlineRobot className="text-gray-400" />
-            <span>Powered by Anvobot AI</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>Secure • Encrypted</span>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 };
