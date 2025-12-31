@@ -47,7 +47,7 @@
     if (!chatFrame) {
       chatFrame = document.createElement("iframe");
       chatFrame.id = "chatbot-frame";
-      chatFrame.src = `https://anvobot-ai-web-agent.vercel.app/chat?websiteId=${websiteId}`;
+      chatFrame.src = `https://anvobot.anisuldev.online/chat?websiteId=${websiteId}`;
 
       // Responsive styles for different screens
       const screenWidth = window.innerWidth;
